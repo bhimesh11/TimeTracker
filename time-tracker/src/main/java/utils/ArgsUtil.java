@@ -12,12 +12,13 @@ public class ArgsUtil {
         }
         Args argsObj = new Args();
         String cmdString = args[0];
-        Command command = switch (cmdString)
+        String convertedCMDformat = cmdString.toLowerCase();
+        Command command = switch (convertedCMDformat)
         {
             case "start" -> Command.TASK_START;
             case "stop" -> Command.TASK_STOP;
             case "report" -> "task".equals(args[1]) ? Command.REPORT_TASKS :
-                    "category".equals(args[1]) ? Command.REPORT_CATEGORIES : null;
+                    " ".equals(args[1]) ? Command.REPORT_CATEGORIES : null;
             default -> throw new RuntimeException("Invalid input arguments");
 
         };
@@ -32,7 +33,7 @@ public class ArgsUtil {
 
     public boolean validate(String[] args)
     {
-        if(args.length<2)
+          if(args.length<2)
         {
             logger.log("Error! not enogh arguments");
             return false;

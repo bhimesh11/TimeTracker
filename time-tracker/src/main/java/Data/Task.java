@@ -1,5 +1,6 @@
 package Data;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Task
@@ -83,5 +84,24 @@ public class Task
                 ", endTime=" + endTime +
                 ", status=" + status +
                 '}';
+    }
+
+
+    public String getCsvFormat() {
+
+        return TaskName + "," +
+                category.getName() + "," +
+                startTime + "," +
+                endTime + "," +
+                status;
+    }
+
+    public Duration getTaskDuration()
+    {
+        if(this.getEndTime()==null)
+        {
+            return null;
+        }
+        return Duration.between(this.getStartTime(),this.getEndTime());
     }
 }

@@ -2,13 +2,22 @@ package Data;
 
 import Logger.logger;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CurrentTasks
 {
-    private Map<String,Task> currentTask = new HashMap<>();
+private Map<String,Task> currentTask = new HashMap<>();
 
+    public CurrentTasks(Map<String, Task> currentTaskCons) {
+        this.currentTask = currentTaskCons;
+    }
+public CurrentTasks()
+{
+
+}
 
     public void addTask(Task task)
     {
@@ -29,9 +38,16 @@ public class CurrentTasks
 
 
     }
-public void completeTask(String task)
+
+public void completeTask(String taskname)
 {
-   Task ExistingTask = currentTask.get(task);
+    for(Map.Entry<String,Task> entries : currentTask.entrySet())
+    {
+        System.out.print(entries.getKey() + "values " + entries.getValue());
+
+    }
+
+   Task ExistingTask = currentTask.get(taskname);
 
    if(ExistingTask==null)
    {
@@ -52,5 +68,45 @@ public void completeTask(String task)
         this.currentTask = currentTask;
     }
 
+    public Map<String, Duration> getTaskReport()
+    {
+        return currentTask
+                .values()
+                .stream()
+                .filter(task -> task.getEndTime()!=null)
+                .collect(Collectors.toMap(Task::getTaskName,Task::getTaskDuration));
 
+    }
+
+    public Map<String,Duration> getCategoryReport()
+    {
+        Map<String , Duration> categoryReport = new HashMap<>();
+
+        currentTask.values().
+                stream()
+                .filter(task -> task.getEndTime()!=null)
+                .forEach(task ->
+                {
+                    String category = task.getCategory().getName();
+                    Duration categoryDuration = categoryReport.getOrDefault(category,Duration.ZERO);
+                    categoryReport.put(category,categoryDuration.plus(task.getTaskDuration()));
+                });
+        return categoryReport;
+    }
+public Map<String,Task> getCurrentTasks()
+{
+    return currentTask;
+}
+
+public void setCurrentTasks(Map<String,Task> currentTask)
+{
+    this.currentTask = currentTask;
+}
+
+    @Override
+    public String toString() {
+        return "CurrentTasks{" +
+                "currentTask=" + currentTask +
+                '}';
+    }
 }
